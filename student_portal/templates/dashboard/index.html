@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Student List{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'dashboard:add_student' %}" class="ant-btn ant-btn-primary">
+    <span>Add Student</span>
+</a>
+{% endblock %}
+
+{% block content %}
+<div class="ant-table-wrapper">
+    <div class="ant-spin-nested-loading">
+        <div class="ant-spin-container">
+            <div class="ant-table">
+                <div class="ant-table-container">
+                    <div class="ant-table-content">
+                        <table style="table-layout: auto;">
+                            <thead class="ant-table-thead">
+                                <tr>
+                                    <th class="ant-table-cell">Name</th>
+                                    <th class="ant-table-cell">Email</th>
+                                    <th class="ant-table-cell">Course</th>
+                                    <th class="ant-table-cell" style="width: 120px;">Marks</th>
+                                    <th class="ant-table-cell" style="width: 150px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="ant-table-tbody">
+                                {% for student in students %}
+                                <tr class="ant-table-row ant-table-row-level-0">
+                                    <td class="ant-table-cell" style="font-weight: 500;">{{ student.name }}</td>
+                                    <td class="ant-table-cell">{{ student.email }}</td>
+                                    <td class="ant-table-cell"><span class="ant-tag ant-tag-blue">{{ student.course }}</span></td>
+                                    <td class="ant-table-cell">
+                                        <b class="{% if student.marks >= 40 %}text-success{% else %}text-danger{% endif %}">
+                                            {{ student.marks }}
+                                        </b>
+                                    </td>
+                                    <td class="ant-table-cell">
+                                        <div style="display: flex; gap: 8px;">
+                                            <a href="{% url 'dashboard:edit_student' student.id %}" class="ant-btn ant-btn-default ant-btn-sm">
+                                                <span>Edit</span>
+                                            </a>
+                                            <form method="post" action="{% url 'dashboard:delete_student' student.id %}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this student?');">
+                                                {% csrf_token %}
+                                                <button type="submit" class="ant-btn ant-btn-dangerous ant-btn-sm">
+                                                    <span>Delete</span>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr class="ant-table-placeholder">
+                                    <td colspan="5" class="ant-table-cell">
+                                        <div class="ant-empty ant-empty-normal">
+                                            <div class="ant-empty-description">No students found</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Student{% endblock %}
+
+{% block header_actions %}
+<a href="{% url 'dashboard:student_list' %}" class="ant-btn ant-btn-default">
+    <span>Back to List</span>
+</a>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; padding: 20px 0;">
+    <h2 style="margin-bottom: 24px; font-weight: 500;">
+        {% if form.instance.pk %}Edit Student{% else %}Add New Student{% endif %}
+    </h2>
+    
+    <form method="post" class="ant-form ant-form-vertical">
+        {% csrf_token %}
+        
+        {% if form.non_field_errors %}
+        <div class="ant-alert ant-alert-error ant-alert-no-icon" style="margin-bottom: 16px;">
+            <div class="ant-alert-content">
+                <div class="ant-alert-message">{{ form.non_field_errors }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% for field in form %}
+        <div class="ant-form-item {% if field.errors %}ant-form-item-has-error{% endif %}" style="margin-bottom: 20px;">
+            <div class="ant-row ant-form-item-row">
+                <div class="ant-col ant-form-item-label">
+                    <label class="ant-form-item-required" title="{{ field.label }}">
+                        <strong style="color: rgba(0, 0, 0, 0.85);">{{ field.label }}</strong>
+                    </label>
+                </div>
+                <div class="ant-col ant-form-item-control">
+                    <div class="ant-form-item-control-input">
+                        <div class="ant-form-item-control-input-content">
+                            {{ field }}
+                        </div>
+                    </div>
+                    {% if field.errors %}
+                    <div class="ant-form-item-explain ant-form-item-explain-connected">
+                        <div role="alert" class="ant-form-item-explain-error">{{ field.errors|striptags }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        
+        <div class="ant-form-item" style="margin-top: 32px; margin-bottom: 0;">
+            <div class="ant-row ant-form-item-row">
+                <div class="ant-col ant-form-item-control">
+                    <div class="ant-form-item-control-input">
+                        <div class="ant-form-item-control-input-content" style="text-align: right;">
+                            <button type="submit" class="ant-btn ant-btn-primary ant-btn-lg" style="min-width: 120px;">
+                                <span>{% if form.instance.pk %}Update{% else %}Save{% endif %} Student</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
